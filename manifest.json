@@ -1,5 +1,5 @@
 {
-	"manifest_version": 2,
+  "manifest_version": 2,
   "name":"YouTube Ad Skipper",
   "description":"YouTube Ad Skipper is an extension that auto skips ads after YouTube provides a skip ad button. It does not block an ad.",
   "version":"1.0",
