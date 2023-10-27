@@ -7,7 +7,7 @@
   "homepage_url": "https://github.com/MauroGuida/YouTube-Ad-Skipper",
   
   "icons": {
-    "128": "logo.png"
+    "48": "logo.png"
   },
   
   "content_scripts":[
