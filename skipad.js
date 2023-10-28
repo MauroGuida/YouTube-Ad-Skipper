@@ -1,17 +1,15 @@
 (function () {
-  var classList = [
+  var skipButtonClassNameList = [
     'videoAdUiSkipButton', // Old close ad button
     'ytp-ad-skip-button ytp-button', // New close ad button
     'ytp-ad-overlay-close-button', // Close overlay button
     "ytp-ad-skip-button-modern ytp-button", // Modern close ad button
   ];
   
-  //var muteButton = document.querySelector('ytp-mute-button ytp-button');
-  //var isMuted = false;
-  
   var timeoutId;
   var observedSkipBtn;
   var skipBtnObserver;
+  var isMuted = false;  
 
   /**
   * Loops over all the class names of buttons that we need to click to skip an
@@ -31,15 +29,14 @@
   }
 
   /**
-  * We check if the button is visible by using the `offsetParent` attribute
-  * on an element. It is `null` if the element, or any of its parents, is set
-  * to have style `display:none`.
+  * We check if the element is visible by using the `offsetParent` attribute.
+  * It is `null` if the element, or any of its parents, is set to have style `display:none`.
   * 
-  * @param {Element} button - The button element
+  * @param {Element} el - The element
   * @returns {boolean} - Whether the element is visible on the screen
   */
-  function isBtnVisible(button) {
-    return button.offsetParent === null ? false : true;
+  function isElementVisible(el) {
+    return el.offsetParent === null ? false : true;
   }
 
   /**
@@ -86,7 +83,7 @@
     // set up the observer first.
     if (!skipBtnObserver) {
       skipBtnObserver = new MutationObserver(function() {
-        if (!isBtnVisible(observedSkipBtn)) {
+        if (!isElementVisible(observedSkipBtn)) {
           return;
         }
 
@@ -111,11 +108,11 @@
   * even on those buttons.
   */
   function checkAndClickButtons() {
-    existingButtons(classList).forEach(button => {
+    existingButtons(skipButtonClassNameList).forEach(button => {
       // We want to make sure that we are only pressing the skip button when it
       // is visible on the screen, so that it is like an actual user is pressing
       // it. This also gives a user time to not-skip the ad in the future.
-      if (!isBtnVisible(button)) {
+      if (!isElementVisible(button)) {
         triggerClickWhenVisible(button);
         
         return;
@@ -123,6 +120,22 @@
 
       triggerClick(button);
     })
+  }
+
+  /**
+  * We check if an ad is visible, and if it is, we mute it; otherwise, the video will be unmuted.
+  */
+  function checkAndMuteAd() {
+    var adDiv = document.querySelector('div.video-ads');
+    var muteButton = document.querySelector('button.ytp-mute-button');
+
+    if (isElementVisible(adDiv) === true && isMuted === false) {
+      triggerClick(muteButton);
+      isMuted = true;
+    } else if (isElementVisible(adDiv) === false && isMuted === true) {
+      triggerClick(muteButton);
+      isMuted = false;
+    }
   }
 
   /**
@@ -147,8 +160,7 @@
 
   /**
   * Initializes an observer on the YouTube Video Player to get events when any
-  * of its child elements change. We can check for the existance of the skip ad
-  * buttons on those changes.
+  * of its child elements change.
   *
   * @returns {Boolean} - true if observer could be set up, false otherwise
   */
@@ -165,6 +177,7 @@
 
     var observer = new MutationObserver(function() {
       checkAndClickButtons();
+      checkAndMuteAd();
     });
 
     observer.observe(ytdPlayer, { childList: true, subtree: true });
