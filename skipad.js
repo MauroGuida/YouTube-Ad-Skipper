@@ -142,20 +142,18 @@
   * Triggers a click event on the given DOM element.
   * 
   * This function is based on an answer here:
-  * http://stackoverflow.com/questions/2705583/how-to-simulate-a-click-with-javascript
+  * https://stackoverflow.com/questions/809057/how-do-i-programmatically-click-on-an-element-in-javascript
   * 
   * @param {Element} el - The element on which to trigger the event
   */
   function triggerClick(el) {
-    var etype = 'click';
+    var clickEvent = new MouseEvent("click", {
+      "view": window,
+      "bubbles": true,
+      "cancelable": false
+    });
 
-    if (typeof el.fireEvent === 'function') {
-      el.fireEvent('on' + etype);
-    } else if (typeof el.dispatchEvent === 'function') {
-      var evObj = document.createEvent('Events');
-      evObj.initEvent(etype, true, false);
-      el.dispatchEvent(evObj);
-    }
+    el.dispatchEvent(clickEvent); 
   }
 
   /**
