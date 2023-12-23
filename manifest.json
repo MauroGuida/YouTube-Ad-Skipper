@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
   "name":"YouTube Ad Skipper",
-  "description":"YouTube Ad Skipper is an extension that auto mutes ads and auto skips them if possible. It does not block an ad but mutes it.",
-  "version":"1.1",
-  "author":"Mauro Guida (Original author: Shreya Dahal)",
+  "description":"YouTube Ad Skipper is an extension that automatically skips ads.",
+  "version":"2.0",
+  "author":"Mauro Guida",
   "homepage_url": "https://github.com/MauroGuida/YouTube-Ad-Skipper",
   
   "icons": {
